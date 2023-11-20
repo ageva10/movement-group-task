@@ -1,6 +1,5 @@
-import { get, post, put, remove } from '../api'
+import { get } from '../api'
 import { UserModel } from '../models'
-import User from "../models/user";
 
 class UsersService {
   private limit: number = 6
