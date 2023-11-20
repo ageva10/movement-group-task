@@ -8,8 +8,9 @@ class AuthService {
 
       const user: any = await AuthModel.findOne({ email })
 
-      if (!user || (user && user.password !== password))
+      if (!user || !(await user.validatePassword(password))) {
         throw new Error('Invalid email or password')
+      }
 
       return jwt.sign({
         email: user.email
