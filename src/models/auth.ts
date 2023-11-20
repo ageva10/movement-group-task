@@ -21,10 +21,10 @@ schema.pre('save', function (this: any, next: any): void {
 
   if (!user.isModified('password')) return next()
 
-  bcrypt.genSalt(HASH_ROUNDS, function(err: any, salt: any) {
+  bcrypt.genSalt(HASH_ROUNDS, function(err: any, salt: string) {
     if (err) return next(err)
 
-    bcrypt.hash(user.password, salt, function(err: any, hash: any) {
+    bcrypt.hash(user.password, salt, function(err: any, hash: string) {
       if (err) return next(err)
       user.password = hash
       next()
@@ -32,7 +32,7 @@ schema.pre('save', function (this: any, next: any): void {
   })
 })
 
-schema.methods.validatePassword = async function validatePassword(data: any) {
+schema.methods.validatePassword = async function validatePassword(data: any): Promise<boolean> {
   return bcrypt.compare(data, this.password)
 }
 

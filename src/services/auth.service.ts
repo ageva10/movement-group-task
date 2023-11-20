@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 class AuthService {
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string): Promise<string> {
     try {
 
       const user: any = await AuthModel.findOne({ email })
@@ -21,7 +21,7 @@ class AuthService {
     }
   }
 
-  async signUp(email: string, password: string) {
+  async signUp(email: string, password: string): Promise<boolean> {
     try {
 
       const user: any = await AuthModel.findOne({ email })
