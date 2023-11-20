@@ -1,10 +1,12 @@
 import { IRouter, Router, Request, Response } from 'express'
 import { UsersService } from '../services'
+import { BaseController } from './'
 
-export default class UsersController {
+export default class UsersController extends BaseController {
 	router: IRouter
 
 	constructor() {
+		super()
 		this.router = Router()
 		this.router.get('/getUsers/:page', this.getUsers.bind(this))
 		this.router.get('/getUser/:id', this.getUser.bind(this))
@@ -22,7 +24,7 @@ export default class UsersController {
 			const users: any = await UsersService.getUsersByPage(Number(req.params.page))
 			return res.status(200).json(users)
 		} catch (err: any) {
-			return res.status(err.response.status).json(err.response.data)
+			this.errorHandler(res, err)
 		}
 	}
 
@@ -31,7 +33,7 @@ export default class UsersController {
 			const user: any = await UsersService.getUserById(req.params.id)
 			return res.status(user ? 200 : 204).json(user ?? user)
 		} catch (err: any) {
-			return res.status(err.response.status).json(err.response.data)
+			this.errorHandler(res, err)
 		}
 	}
 
@@ -40,7 +42,7 @@ export default class UsersController {
 			const user = await UsersService.createUser(req.body)
 			return res.status(201).json(user)
 		} catch (err: any) {
-			return res.status(err.response.status).json(err.response.data)
+			this.errorHandler(res, err)
 		}
 	}
 
@@ -49,10 +51,7 @@ export default class UsersController {
 			const user = await UsersService.updateUser(req.params.id, req.body)
 			return res.status(200).json(user)
 		} catch (err: any) {
-			return res.status(400).json({
-				success: false,
-				message: err.message
-			})
+			this.errorHandler(res, err, 204)
 		}
 	}
 
@@ -61,10 +60,7 @@ export default class UsersController {
 			await UsersService.removeUser(req.params.id)
 			return res.status(200).end()
 		} catch (err: any) {
-			return res.status(400).json({
-				success: false,
-				message: err.message
-			})
+			this.errorHandler(res, err, 204)
 		}
 	}
 }

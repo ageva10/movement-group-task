@@ -23,10 +23,10 @@ export default class BaseController {
 		}
 	}
 
-	// protected errorHandler(res: Response, err: any) {
-	// 	return res.status(400).json({
-	// 		success: false,
-	// 		errorMessage: err.message
-	// 	})
-	// }
+	protected errorHandler(res: Response, err: any, status?: number) {
+		return res.status(status || err.response?.status || err?.status || 400).json({
+			success: false,
+			message: err.message || 'A server error occurred'
+		})
+	}
 }
